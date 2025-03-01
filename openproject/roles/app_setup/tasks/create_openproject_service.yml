@@ -1,0 +1,10 @@
+- name: Create OpenProject systemd service
+  ansible.builtin.template:
+    src: openproject.service.j2
+    dest: /etc/systemd/system/openproject.service
+
+- name: Reload systemd
+  ansible.builtin.shell: "systemctl daemon-reexec"
+  notify:
+    - restart_openproject_service
+    - check_openproject_status

@@ -1,0 +1,36 @@
+- name: Generate database.yml from template
+  ansible.builtin.template:
+    src: database.yml.j2
+    dest: /home/vagrant/openproject/config/database.yml
+    owner: vagrant
+    group: vagrant
+    mode: '0644'
+
+- name: Run database migrations
+  ansible.builtin.shell: "RAILS_ENV=production SECRET_KEY_BASE={{ rails_env_secret_key }} bundle exec rake db:create db:migrate && touch /home/{{ app_user }}/openproject/.db_migrated"
+  args:
+    chdir: "/home/{{ app_user }}/openproject"
+    executable: /bin/bash
+    creates: "/home/{{ app_user }}/openproject/.db_migrated"
+  environment:
+    PATH: "/home/{{ app_user }}/.rbenv/shims:/home/{{ app_user }}/.rbenv/bin:{{ ansible_env.PATH }}"
+  when: ansible_host == "192.168.77.101"
+
+- name: Seed the database
+  ansible.builtin.shell: "RAILS_ENV=production SECRET_KEY_BASE={{ rails_env_secret_key }} bundle exec rake db:seed && touch /home/{{ app_user }}/openproject/.db_seeded"
+  args:
+    chdir: "/home/{{ app_user }}/openproject"
+    executable: /bin/bash
+    creates: "/home/{{ app_user }}/openproject/.db_seeded"
+  environment:
+    PATH: "/home/{{ app_user }}/.rbenv/shims:/home/{{ app_user }}/.rbenv/bin:{{ ansible_env.PATH }}"
+  when: ansible_host == "192.168.77.101"
+
+- name: Precompile frontend assets
+  ansible.builtin.shell: "RAILS_ENV=production SECRET_KEY_BASE={{ rails_env_secret_key }} bundle exec rake assets:precompile && touch /home/{{ app_user }}/openproject/.assets_precompiled"
+  args:
+    chdir: "/home/{{ app_user }}/openproject"
+    executable: /bin/bash
+    creates: "/home/{{ app_user }}/openproject/.assets_precompiled"
+  environment:
+    PATH: "/home/{{ app_user }}/.rbenv/shims:/home/{{ app_user }}/.rbenv/bin:{{ ansible_env.PATH }}"

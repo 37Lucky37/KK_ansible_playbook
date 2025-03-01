@@ -1,0 +1,70 @@
+- name: Add PostgreSQL GPG key
+  ansible.builtin.apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: Add PostgreSQL APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install PostgreSQL
+  ansible.builtin.apt:
+    pkg:
+      - postgresql-{{ postgresql_version }}
+      - postgresql-contrib-{{ postgresql_version }}
+      - python3-psycopg2
+    state: present
+
+- name: Start and enable the service
+  ansible.builtin.systemd:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Set options
+  community.postgresql.postgresql_set:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  become: true
+  become_user: postgres
+  loop: "{{ postgresql_options|flatten(levels=1) }}"
+  notify:
+    - Restart PostgreSQL
+
+- name: Create the database
+  community.postgresql.postgresql_db:
+    name: "{{ psql_info.db_name }}"
+  become: true
+  become_user: postgres
+
+- name: Create the user
+  community.postgresql.postgresql_user:
+    db: "{{ psql_info.db_name }}"
+    name: "{{ psql_info.db_username }}"
+    password: "{{ psql_info.db_password }}"
+  become: true
+  become_user: postgres
+
+- name: Grant CREATEDB privilege to openproject_user using psql
+  ansible.builtin.shell: >
+    psql -U postgres -c "ALTER ROLE {{ psql_info.db_username }} CREATEDB;"
+  become: yes
+  become_user: postgres
+
+- name: Add entries to pg_hba
+  community.postgresql.postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf"
+    address: "{{ allowed_ip }}"
+    contype: host
+    databases: all
+    method: md5
+    users: "{{ psql_info.db_username }}"
+  become: true
+  become_user: postgres
+  notify:
+    - Restart PostgreSQL

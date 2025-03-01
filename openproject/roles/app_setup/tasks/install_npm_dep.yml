@@ -1,0 +1,5 @@
+- name: Install frontend dependencies
+  ansible.builtin.shell: "npm install"
+  args:
+    chdir: "/home/{{ app_user }}/openproject/frontend"
+    executable: /bin/bash

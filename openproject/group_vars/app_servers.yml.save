@@ -1,0 +1,12 @@
+[WARNING]:  * Failed to parse /home/vagrant/ansible/openproject/hosts with yaml plugin: We were unable to read either as
+JSON nor YAML, these are the errors we got from each: JSON: Expecting value: line 2 column 1 (char 1)  Syntax Error while
+loading YAML.   did not find expected <document start>  The error appears to be in
+'/home/vagrant/ansible/openproject/hosts': line 48, column 1, but may be elsewhere in the file depending on the exact
+syntax problem.  The offending line appears to be:  [app_servers] app ansible_host=192.168.77.101 ^ here
+[WARNING]:  * Failed to parse /home/vagrant/ansible/openproject/hosts with ini plugin:
+/home/vagrant/ansible/openproject/hosts:49: Expected key=value host variable assignment, got: ansible_user:
+[WARNING]: Unable to parse /home/vagrant/ansible/openproject/hosts as an inventory source
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match
+'all'
+ansible_ssh_private_key_file: /home/vagrant/.ssh/key

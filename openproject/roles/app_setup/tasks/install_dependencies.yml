@@ -1,0 +1,23 @@
+- name: Update apt cache and install dependencies
+  ansible.builtin.apt:
+    update_cache: yes
+    name:
+      - libffi-dev
+      - libyaml-dev
+      - libgmp-dev
+      - zlib1g-dev
+      - libssl-dev
+      - libreadline-dev
+      - libxml2-dev
+      - libxslt1-dev
+      - build-essential
+      - gcc
+      - g++
+      - make
+      - libpq-dev
+      - memcached
+      - imagemagick
+      - libapr1
+      - libaprutil1
+      - libjansson4
+    state: present

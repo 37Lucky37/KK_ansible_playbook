@@ -1,0 +1,29 @@
+- name: Download Node.js binary
+  ansible.builtin.get_url:
+    url: "https://nodejs.org/dist/v{{ node_version }}/node-v{{ node_version }}-linux-x64.tar.xz"
+    dest: "/tmp/node-v{{ node_version }}-linux-x64.tar.xz"
+
+- name: Extract Node.js
+  ansible.builtin.unarchive:
+    src: "/tmp/node-v{{ node_version }}-linux-x64.tar.xz"
+    dest: "/usr/local/"
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Create symlink for Node.js
+  ansible.builtin.file:
+    src: /usr/local/bin/node
+    dest: /usr/bin/node
+    state: link
+
+- name: Create symlink for npm
+  ansible.builtin.file:
+    src: /usr/local/bin/npm
+    dest: /usr/bin/npm
+    state: link
+
+- name: Ensure /usr/local/bin is in PATH
+  ansible.builtin.lineinfile:
+    path: /home/{{ app_user }}/.bashrc
+    line: 'export PATH=$PATH:/usr/local/bin'
+    insertafter: EOF

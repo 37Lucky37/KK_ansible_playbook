@@ -1,0 +1,11 @@
+---
+- name: restart_openproject_service
+  ansible.builtin.systemd:
+    name: openproject
+    enabled: true
+    state: restarted
+
+- name: check_openproject_status
+  ansible.builtin.systemd:
+    name: openproject
+    state: started

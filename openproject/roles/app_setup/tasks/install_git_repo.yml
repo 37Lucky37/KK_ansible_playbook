@@ -1,0 +1,13 @@
+- name: Set Git postBuffer to 500MB
+  ansible.builtin.git_config:
+    name: http.postBuffer
+    scope: global
+    value: "524288000"
+
+- name: Clone private repository using PAT
+  ansible.builtin.git:
+    repo: "https://{{ github_info.username }}:{{ github_info.token }}@github.com/{{ github_info.username }}/openproject_repo.git"
+    dest: "/home/{{ app_user }}/openproject"
+    version: main
+    update: yes
+    force: yes 

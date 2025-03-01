@@ -1,0 +1,30 @@
+- name: Install Dependencies
+  ansible.builtin.include_tasks: install_dependencies.yml
+
+- name: Install PostgreSQL
+  ansible.builtin.include_tasks: install_psql.yml
+
+- name: Install Node
+  ansible.builtin.include_tasks: install_node.yml
+
+- name: Install Ruby
+  ansible.builtin.include_tasks: install_ruby.yml
+
+- name: Install OpenProject Repo
+  ansible.builtin.include_tasks: install_git_repo.yml
+
+- name: Install Gem dependencies
+  ansible.builtin.include_tasks: install_Gem_dep.yml
+
+- name: Install npm dependencies
+  ansible.builtin.include_tasks: install_npm_dep.yml
+
+- name: Export Rails secret key
+  ansible.builtin.include_tasks: export_secret_key.yml
+
+- name: Migrations, Seed, Assets precompile
+  ansible.builtin.include_tasks: prepare_before_run.yml
+
+- name: Create OpenProject service
+  ansible.builtin.include_tasks: create_openproject_service.yml
+  

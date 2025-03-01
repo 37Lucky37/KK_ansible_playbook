@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenProject Service
+After=network.target
+
+[Service]
+User={{ app_user }}
+WorkingDirectory=/home/{{ app_user }}/openproject
+ExecStart=/bin/bash -lc 'cd /home/{{ app_user }}/openproject && RAILS_ENV=production bundle exec puma'
+Restart=always
+Environment="RAILS_ENV=production"
+Environment="SECRET_KEY_BASE={{ rails_env_secret_key }}"
+Environment="MEMCACHE_SERVERS=127.0.0.1:11211"
+Environment="HOST=0.0.0.0"
+Environment="RBENV_ROOT=/home/{{ app_user }}/.rbenv"
+Environment="PATH=/home/{{ app_user }}/.rbenv/shims:/home/{{ app_user }}/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+Environment="OPENPROJECT_HTTPS=false"
+
+[Install]
+WantedBy=multi-user.target

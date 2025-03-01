@@ -1,0 +1,14 @@
+- name: Update APT packages
+  become: true
+  import_playbook: update_apt.yml
+
+- name: Set Up OpenProject
+  hosts: all
+  become: true
+  vars_files:
+    - vars.yml
+    - secrets.vault
+  roles:
+    - { role: db_setup, when: "'db_servers' in group_names" }
+    - { role: app_setup, when: "'app_servers' in group_names" }
+    - { role: web_setup, when: "'web_servers' in group_names" }

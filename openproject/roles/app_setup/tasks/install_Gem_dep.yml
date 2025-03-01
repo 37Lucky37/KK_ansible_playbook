@@ -1,0 +1,8 @@
+- name: Install GEM dependencies (only once)
+  ansible.builtin.shell: "bundle install --without development test && touch /home/{{ app_user }}/openproject/.gem_deps_installed"
+  args:
+    chdir: "/home/{{ app_user }}/openproject"
+    executable: /bin/bash
+    creates: "/home/{{ app_user }}/openproject/.gem_deps_installed"
+#  environment:
+#    PATH: "/home/{{ app_user }}/.rbenv/shims:/home/vagrant/.rbenv/bin:{{ ansible_env.PATH }}"

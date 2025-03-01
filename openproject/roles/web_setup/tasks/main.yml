@@ -1,0 +1,39 @@
+- name: Install Apache2
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: Enable Apache proxy modules
+  ansible.builtin.shell: |
+    a2enmod proxy
+    a2enmod proxy_http
+    a2enmod proxy_balancer
+    a2enmod lbmethod_byrequests
+    a2enmod headers
+    a2enmod ssl
+  args:
+    executable: /bin/bash
+  notify: restart apache2
+
+- name: Create Apache virtual host configuration for OpenProject
+  ansible.builtin.template:
+    src: openproject.conf.j2
+    dest: "{{ apache_conf_path }}"
+
+- name: Enable OpenProject site
+  ansible.builtin.shell: "a2ensite openproject"
+  args:
+    executable: /bin/bash
+
+- name: Disable default Apache site
+  ansible.builtin.shell: "a2dissite 000-default"
+  args:
+    executable: /bin/bash
+  notify: restart apache2
+
+- name: Check Apache service status
+  ansible.builtin.systemd:
+    name: apache2
+    state: started
+

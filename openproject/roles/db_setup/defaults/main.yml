@@ -1,0 +1,5 @@
+postgresql_version: 13
+allowed_ip: "192.168.77.0/24"
+postgresql_options:
+  - name: "listen_addresses"
+    value: "*"

@@ -1,0 +1,36 @@
+#- name: Ensure vagrant owns /usr/local/bin/
+#  ansible.builtin.file:
+#    path: /usr/local/bin/
+#    owner: vagrant
+#    group: vagrant
+#    recurse: yes
+#  become: yes
+
+- name: Install Ruby via geerlingguy.ruby as vagrant
+  block:
+    - name: Install Ruby via geerlingguy.ruby
+      ansible.builtin.include_role:
+        name: geerlingguy.ruby
+      vars:
+        workspace: /home/vagrant
+        ruby_install_from_source: true
+        ruby_version: "3.4.1"
+        ruby_download_url: "https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.1.tar.gz"
+        ruby_rbenv:
+          enabled: true
+          user: root
+          versions:
+            - "3.4.1"
+          global: "3.4.1"
+  become: yes
+
+- name: Ensure write permission for /usr/local/bin/ruby
+  ansible.builtin.file:
+    path: /usr/local/bin/ruby
+    mode: 'u+w'
+  become: yes
+
+- name: Install Bundler globally
+  ansible.builtin.command: /usr/local/bin/gem install bundler -v "{{ bundler_version }}" --no-user-install --no-document
+  become: yes
+

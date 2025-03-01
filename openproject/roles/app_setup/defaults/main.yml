@@ -1,0 +1,10 @@
+---
+# defaults file for app_setup
+
+ruby_version: "3.4.1"
+bundler_version: "2.6.3"
+postgresql_version: "13"
+node_version: "20.18.3"
+openproject_repo: "https://github.com/37Lucky37/openproject_repo"
+db_host: "192.168.77.102"
+app_user: "vagrant"

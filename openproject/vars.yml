@@ -1,0 +1,10 @@
+psql_info:
+  db_name: openproject_db
+  db_username: openproject_user
+  db_password: "{{ vault_db_password }}"
+
+github_info:
+  username: 37Lucky37
+  token: "{{ github_token }}"
+
+rails_env_secret_key: "{{ secret_key_base }}"

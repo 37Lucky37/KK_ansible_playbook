@@ -1,0 +1,9 @@
+production:
+  adapter: postgresql
+  database: {{ psql_info.db_name }}
+  host: "{{ db_host }}"
+  username: {{ psql_info.db_username }}
+  password: "{{ psql_info.db_password }}"
+  encoding: unicode
+  pool: 20
+
